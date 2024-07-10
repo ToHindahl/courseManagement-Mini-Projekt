@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="courseManagement" nsURI="http://www.example.org/courseManagement"
+    nsPrefix="courseManagement">
+  <eClassifiers xsi:type="ecore:EClass" name="Program">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="enrolled" upperBound="-1"
+        eType="#//Student" eOpposite="#//Student/program"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="required" lowerBound="1"
+        eType="#//CourseSet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="courses" lowerBound="1"
+        eType="#//CourseSet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Grade">
+    <eLiterals name="A"/>
+    <eLiterals name="B" value="1"/>
+    <eLiterals name="C" value="2"/>
+    <eLiterals name="D" value="3"/>
+    <eLiterals name="F" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Semester">
+    <eLiterals name="ONE"/>
+    <eLiterals name="TWO" value="1"/>
+    <eLiterals name="THREE" value="2"/>
+    <eLiterals name="FOUR" value="3"/>
+    <eLiterals name="FIVE" value="4"/>
+    <eLiterals name="SIX" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CourseSet">
+    <eOperations name="allPrereqs" eType="#//CourseSet"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
+        eType="#//Course"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Student">
+    <eOperations name="canComplete" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eParameters name="c" eType="#//Course"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="program" eType="#//Program"
+        eOpposite="#//Program/enrolled"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transcript" upperBound="-1"
+        eType="#//Result"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="completed" lowerBound="1"
+        eType="#//CourseSet" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="semester" lowerBound="1"
+        eType="#//Semester"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Course" abstract="true">
+    <eOperations name="isElective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Result">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="key" lowerBound="1" eType="#//Course"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1" eType="#//Grade"
+        defaultValueLiteral="F"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Advanced" eSuperTypes="#//Course">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="prereqs" lowerBound="1"
+        upperBound="-1" eType="#//Course" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Introductory" eSuperTypes="#//Course"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ServiceFacade">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="result" upperBound="-1"
+        eType="#//Result" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="student" upperBound="-1"
+        eType="#//Student" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="course" upperBound="-1"
+        eType="#//Course" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="program" upperBound="-1"
+        eType="#//Program" containment="true"/>
+  </eClassifiers>
+</ecore:EPackage>
