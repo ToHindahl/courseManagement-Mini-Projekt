@@ -162,8 +162,6 @@ public class AdvancedImpl extends CourseImpl implements Advanced {
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
 		
-		CourseManagementFactory.eINSTANCE.get
-		
 	}
 
 } //AdvancedImpl

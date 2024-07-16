@@ -2,7 +2,9 @@
  */
 package courseManagement.impl;
 
+import courseManagement.Advanced;
 import courseManagement.Course;
+import courseManagement.CourseManagementFactory;
 import courseManagement.CourseManagementPackage;
 import courseManagement.CourseSet;
 
@@ -78,14 +80,29 @@ public class CourseSetImpl extends MinimalEObjectImpl.Container implements Cours
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public CourseSet allPrereqs() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+        CourseSet allPrereqs = CourseManagementFactory.eINSTANCE.createCourseSet();
+        for (Course course : elements) {
+            getAllPrereqs(course, allPrereqs);
+        }
+        return allPrereqs;
 	}
+	
+	private void getAllPrereqs(Course course, CourseSet allPrereqs) {
+		if (course.getClass() == AdvancedImpl.class) {
+			Advanced aCourse = (Advanced) course;
+	        for (Course prereq : aCourse.getPrereqs()) {
+	            if (!allPrereqs.getElements().contains(prereq)) {
+	                allPrereqs.getElements().add(prereq);
+	                getAllPrereqs(prereq, allPrereqs);
+	            }
+	        }
+		}
+
+    }
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -3,8 +3,11 @@
 package courseManagement.impl;
 
 import courseManagement.Course;
+import courseManagement.CourseManagementFactory;
 import courseManagement.CourseManagementPackage;
 import courseManagement.CourseSet;
+import courseManagement.Grade;
+import courseManagement.Introductory;
 import courseManagement.Program;
 import courseManagement.Result;
 import courseManagement.Semester;
@@ -321,13 +324,47 @@ public class StudentImpl extends MinimalEObjectImpl.Container implements Student
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	@Override
 	public boolean canComplete(Course c) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		System.out.println("Check canComplete: " + c.toString() + ", " + this.toString() + ", " + this.getTranscript().toString());
+		CourseSet allPrereqs = CourseManagementFactory.eINSTANCE.createCourseSet();
+		allPrereqs.getElements().add(c);
+		System.out.println(allPrereqs.allPrereqs().getElements().toString());
+        for (Course prereq : allPrereqs.allPrereqs().getElements()) {
+        	if(c instanceof Introductory) {
+        		for (Result r : this.getTranscript()) {
+            		if (r.getKey().equals(prereq)) {
+            			Grade rFromC = r.getValue();
+            			if (rFromC == Grade.F) {
+            				System.out.println("check2 false");
+            				return false;
+            			} else {
+            				return true;
+            			}
+            		}
+            	}
+        		return true;
+        	} else {
+        		for (Result r : this.getTranscript()) {
+            		if (r.getKey().equals(prereq)) {
+            			Grade rFromC = r.getValue();
+            			if (rFromC == Grade.F) {
+            				System.out.println("check2 false");
+            				return false;
+            			} else {
+            				return true;
+            			}
+            		}
+            	}
+            	System.out.println("check1 false");
+    			return false;	
+        	}
+        	
+        }
+        System.out.println("check true");
+        return true;
 	}
 
 	/**
