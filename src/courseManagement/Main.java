@@ -50,15 +50,16 @@ public class Main extends Application {
         // Komponenten
         Button addProgramButton = new Button("Programm hinzufügen");
         Button addStudentButton = new Button("Student hinzufügen");
-        Button joinProgramButton = new Button("Student zu Programm hinzufügen");
-        Button addCourseButton = new Button("Kurs hinzufügen");
-        Button completeCoursesButton = new Button("Kurse abschließen");
+        Button joinProgramButton = new Button("Student zu Programm zuordnen");
+        Button addIntroductoryCourseButton = new Button("Einführungskurs hinzufügen");
+        Button addAdvancedCourseButton = new Button("Weiterführenden Kurs hinzufügen");
+        Button completeCoursesButton = new Button("Kurs abschließen");
         Button loadDataButton = new Button("Daten laden");
         Button saveDataButton = new Button("Daten speichern");
 
         // Komponenten zum Container hinzufügen
         root.getChildren().addAll(
-            addProgramButton, addStudentButton, joinProgramButton, addCourseButton, 
+            addProgramButton, addStudentButton, joinProgramButton, addAdvancedCourseButton, addIntroductoryCourseButton, 
             completeCoursesButton, loadDataButton, saveDataButton
         );
 
@@ -66,13 +67,14 @@ public class Main extends Application {
         addProgramButton.setOnAction(e -> addProgram());
         addStudentButton.setOnAction(e -> addStudent());
         joinProgramButton.setOnAction(e -> joinProgram());
-        addCourseButton.setOnAction(e -> addCourse());
+        addIntroductoryCourseButton.setOnAction(e -> addIntroductoryCourse());
+        addAdvancedCourseButton.setOnAction(e -> addAdvancedCourse());
         completeCoursesButton.setOnAction(e -> completeCourses());
         loadDataButton.setOnAction(e -> loadData());
         saveDataButton.setOnAction(e -> saveData());
 
         // Scene erstellen und anzeigen
-        Scene scene = new Scene(root, 300, 250);
+        Scene scene = new Scene(root, 300, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -140,7 +142,14 @@ public class Main extends Application {
         });
     }
 
-    private void addCourse() {
+    private void addAdvancedCourse() {
+    	if (university.getStudent().isEmpty() || university.getProgram().isEmpty() || university.getCourse().isEmpty()) {
+    		System.out.println(university.getStudent().toString());
+    		System.out.println(university.getProgram().toString());
+    		System.out.println(university.getCourse().toString());
+            showAlert("Fehler", "Es müssen zuerst Studenten, Programme und ein Einführungskurs angelegt werden.");
+            return;
+        }
         ChoiceDialog<Program> programDialog = new ChoiceDialog<>(university.getProgram().get(0), university.getProgram());
         programDialog.setTitle("Programm auswählen");
         programDialog.setHeaderText("Wählen Sie ein Programm aus:");
@@ -149,20 +158,6 @@ public class Main extends Application {
         Optional<Program> programResult = programDialog.showAndWait();
         if (programResult.isPresent()) {
             Program program = programResult.get();
-            if(program.getCourses().getElements().isEmpty()) {
-            	TextInputDialog dialog = new TextInputDialog();
-    	        dialog.setTitle("Kurs hinzufügen");
-    	        dialog.setHeaderText("Geben Sie den Namen des Kurses ein:");
-    	        dialog.setContentText("Kursname:");
-    	
-    	        Optional<String> result = dialog.showAndWait();
-    	        result.ifPresent(name -> {
-    	            Course course = factory.createIntroductory();
-    	            course.setTitle(name);
-    	            program.getCourses().getElements().add(course);
-    	            university.getCourse().add(course);
-    	        });
-            } else {
             	ChoiceDialog<Course> requieredCourseDialog = new ChoiceDialog<>(program.getCourses().getElements().get(0), program.getCourses().getElements());
             	requieredCourseDialog.setTitle("Programm auswählen");
             	requieredCourseDialog.setHeaderText("Wählen Sie ein Programm aus:");
@@ -188,6 +183,34 @@ public class Main extends Application {
             }
 
         }
+    
+    private void addIntroductoryCourse() {
+    	if (university.getStudent().isEmpty() || university.getProgram().isEmpty()) {
+    		System.out.println(university.getStudent().toString());
+    		System.out.println(university.getProgram().toString());
+            showAlert("Fehler", "Es müssen zuerst Studenten und Programme angelegt werden.");
+            return;
+        }
+    	  ChoiceDialog<Program> programDialog = new ChoiceDialog<>(university.getProgram().get(0), university.getProgram());
+          programDialog.setTitle("Programm auswählen");
+          programDialog.setHeaderText("Wählen Sie ein Programm aus:");
+          programDialog.setContentText("Programm:");
+
+          Optional<Program> programResult = programDialog.showAndWait();
+          if (programResult.isPresent()) {
+              Program program = programResult.get();
+              	TextInputDialog dialog = new TextInputDialog();
+      	        dialog.setTitle("Einführungskurs hinzufügen");
+      	        dialog.setHeaderText("Geben Sie den Namen des Kurses ein:");
+      	        dialog.setContentText("Kursname:");
+      	
+      	        Optional<String> result = dialog.showAndWait();
+      	        result.ifPresent(name -> {
+      	            Course course = factory.createIntroductory();
+      	            course.setTitle(name);
+      	            program.getCourses().getElements().add(course);
+      	            university.getCourse().add(course);
+      	        });}
     }
 
     private void completeCourses() {
