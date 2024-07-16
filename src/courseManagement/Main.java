@@ -240,6 +240,13 @@ public class Main extends Application {
                 	result.setValue(grade);
                 	student.getTranscript().add(result);
                 	university.getResult().add(result);
+                	if (student.getCompleted() == null) {
+                		CourseSet cs = factory.createCourseSet();
+                		cs.getElements().add(course);
+                		student.setCompleted(cs);
+                	} else {
+                		student.getCompleted().getElements().add(course);
+                	}
                 	showAlert("Information", "Kurs erfolgreich abgeschlossen.");
                 }
                 
